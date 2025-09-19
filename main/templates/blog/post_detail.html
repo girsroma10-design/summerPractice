@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <div class="d-flex justify-content-between align-items-start mb-3">
+    <h1 class="me-3">{{ post.title }}</h1>
+
+    {% if user == post.author %}
+      <div class="btn-group">
+        <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-outline-warning" title="Редактировать">
+          <i class="bi bi-pencil-square"></i>
+        </a>
+        <form action="{% url 'post_delete' pk=post.pk %}" method="post" onsubmit="return confirm('Удалить пост?');" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger" title="Удалить">
+            <i class="bi bi-trash"></i>
+          </button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="mb-4 text-muted small">
+    <span>Автор: <strong>{{ post.author.username }}</strong></span> |
+    <span>Опубликовано: {{ post.published_date|date:"d.m.Y H:i" }}</span>
+  </div>
+
+  {% if post.image %}
+    <div class="mb-4 text-center">
+      <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid rounded" style="max-height: 400px; object-fit: contain;">
+    </div>
+  {% endif %}
+
+  <article class="mb-5" style="white-space: pre-line;">
+    {{ post.content }}
+  </article>
+
+  <hr>
+
+  <section>
+    <h3 class="mb-3">Комментарии ({{ comments|length }})</h3>
+
+    {% if comments %}
+      <div class="list-group mb-4">
+        {% for comment in comments %}
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between mb-1">
+              <strong>{{ comment.author.username }}</strong>
+              <small class="text-muted">{{ comment.created_at|date:"d.m.Y H:i" }}</small>
+            </div>
+            <p class="mb-0" style="white-space: pre-line;">{{ comment.text }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p>Пока нет комментариев.</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+      <h4>Оставить комментарий</h4>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="mb-3">
+          {{ form.text.label_tag }}
+          {{ form.text }}
+          {{ form.text.errors }}
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+      </form>
+    {% else %}
+      <p>Чтобы оставить комментарий, пожалуйста, <a href="{% url 'login' %}">войдите в систему</a>.</p>
+    {% endif %}
+  </section>
+
+  <a href="{% url 'home' %}" class="btn btn-secondary mt-4">← Назад</a>
+
+</div>
+{% endblock %}

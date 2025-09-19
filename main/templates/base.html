@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Добро пожаловать в блог{% endblock %}</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="theme-{{ user_theme|default:'light' }}">
+    <div class="d-flex flex-column min-vh-100">
+
+        <header class="bg-primary text-white py-3 shadow-sm">
+            <div class="container d-flex justify-content-between align-items-center">
+                <a href="{% url 'home' %}" class="text-white text-decoration-none fs-3 fw-bold">
+                    Блог на Django
+                </a>
+                <nav>
+                    <ul class="nav gap-3">
+                        <li class="nav-item">
+                            <a href="{% url 'category_list' %}" class="nav-link text-white px-2">Темы</a>
+                        </li>
+
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a href="{% url 'my_posts' %}" class="nav-link text-white px-2">Мои статьи</a>
+                            </li>
+                            <li class="nav-item d-flex align-items-center">
+                                <a href="{% url 'profile' %}" class="nav-link d-flex align-items-center text-white px-2">
+                                    {% if user.profile.avatar %}
+                                        <img src="{{ user.profile.avatar.url }}" alt="Аватар" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;" />
+                                    {% endif %}
+                                    Профиль
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'settings' %}" class="nav-link text-white px-2">Настройки</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'logout' %}" class="nav-link text-white px-2">Выйти</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a href="{% url 'login' %}" class="nav-link text-white px-2">Войти</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'register' %}" class="nav-link text-white px-2">Регистрация</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main class="flex-grow-1 container py-5">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="bg-light border-top mt-auto py-4">
+            <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <div class="mb-3 mb-md-0">
+                    <strong>О проекте</strong>
+                    <p class="mb-0 small text-muted">Этот блог создан на Django для демонстрации функционала.</p>
+                </div>
+                <div>
+                    <strong>Навигация</strong>
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item"><a href="{% url 'home' %}" class="text-decoration-none text-secondary">Главная</a></li>
+                        <li class="list-inline-item"><a href="{% url 'category_list' %}" class="text-decoration-none text-secondary">Темы</a></li>
+                        <li class="list-inline-item"><a href="{% url 'profile' %}" class="text-decoration-none text-secondary">Профиль</a></li>
+                    </ul>
+                </div>
+                <div class="text-muted small">&copy; {% now "Y" %} Django Блог</div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Категории{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Категории</h1>
+
+    {% if categories %}
+    <ul class="list-group mb-4">
+        <li class="list-group-item {% if not selected_category %}active{% endif %}">
+            <a href="{% url 'category_list' %}" class="text-decoration-none {% if not selected_category %}text-white{% endif %}">
+                Все категории
+            </a>
+        </li>
+        {% for category in categories %}
+        <li class="list-group-item d-flex justify-content-between align-items-center
+            {% if selected_category and selected_category.id == category.id %}active{% endif %}">
+            <a href="?category={{ category.id }}" class="text-decoration-none
+                {% if selected_category and selected_category.id == category.id %}text-white{% endif %}">
+                {{ category.name }}
+            </a>
+            <span class="badge bg-primary rounded-pill">{{ category.post_set.count }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-warning">Категорий пока нет.</div>
+    {% endif %}
+
+    <h2 class="mb-3">
+        {% if selected_category %}
+            Посты в категории: {{ selected_category.name }}
+        {% else %}
+            Все посты
+        {% endif %}
+    </h2>
+
+    {% if selected_category and selected_category.description %}
+    <p class="mb-4 text-muted">{{ selected_category.description }}</p>
+    {% endif %}
+
+    {% if posts %}
+        {% for post in posts %}
+        <div class="card mb-4">
+            {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" style="height: 300px; object-fit: cover;" alt="{{ post.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h3 class="card-title">{{ post.title }}</h3>
+                <p class="card-text">{{ post.content|truncatechars:200 }}</p>
+                <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-primary">Читать далее</a>
+            </div>
+            <div class="card-footer text-muted">
+                Опубликовано {{ post.published_date|date:"d.m.Y H:i" }} |
+                Автор: {{ post.author.username }}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="alert alert-info">Постов в этой категории пока нет.</div>
+    {% endif %}
+</div>
+{% endblock %}

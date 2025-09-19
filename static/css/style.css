@@ -1,0 +1,196 @@
+/* Основные стили для тем */
+body.theme-light {
+    --bg-color: #ffffff;
+    --text-color: #212529;
+    --primary-color: #0d6efd;
+    --primary-hover: #0a58ca;
+    --secondary-color: #6c757d;
+    --border-color: #dee2e6;
+    --card-bg: #ffffff;
+    --navbar-bg: #0d6efd;
+    --footer-bg: #343a40;
+    --footer-text: #ffffff;
+    --muted-text: #6c757d;
+}
+
+body.theme-dark {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --primary-color: #66aaff;
+    --primary-hover: #99cfff;
+    --secondary-color: #6c757d;
+    --border-color: #333333;
+    --card-bg: #1e1e1e;
+    --navbar-bg: #222222;
+    --footer-bg: #111111;
+    --footer-text: #cccccc;
+    --muted-text: #8e8e8e;
+}
+
+/* Общие стили для обеих тем */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+
+.navbar {
+    background-color: var(--navbar-bg) !important;
+}
+
+footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+}
+
+/* Стили для карточек */
+.card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.card-header {
+    background-color: var(--card-bg);
+    border-bottom-color: var(--border-color);
+}
+
+.card-footer {
+    background-color: var(--card-bg);
+    border-top-color: var(--border-color);
+}
+
+/* Стили для форм */
+.form-control, .form-select {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-label {
+    color: var(--text-color);
+}
+
+/* Стили для кнопок */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Стили для таблиц */
+.table {
+    color: var(--text-color);
+}
+
+.table th {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+.table td {
+    border-color: var(--border-color);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+body.theme-dark .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Стили для текста */
+.text-muted {
+    color: var(--muted-text) !important;
+}
+
+/* Стили для списков */
+.list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Стили для модальных окон */
+.modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+.modal-header, .modal-footer {
+    border-color: var(--border-color);
+}
+
+/* Стили для пагинации */
+.page-link {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--primary-color);
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.page-link:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-hover);
+}
+
+/* Стили для alert */
+.alert {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Специфические стили для элементов блога */
+.post-image {
+    border: 1px solid var(--border-color);
+    max-width: 100%;
+    height: auto;
+}
+
+.comment {
+    background-color: var(--card-bg);
+    border-left: 3px solid var(--primary-color);
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.avatar {
+    border: 2px solid var(--primary-color);
+}

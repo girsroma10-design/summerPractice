@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="row">
+
+    {% if user.is_authenticated %}
+    <aside class="col-md-3 order-md-2 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Публикации</h5>
+            </div>
+            <div class="card-body d-flex flex-column gap-2">
+                <a href="{% url 'create_post' %}" class="btn btn-success w-100">Добавить публикацию</a>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Категории блога</h5>
+            </div>
+            <div class="card-body">
+                {% if categories %}
+                <ul class="list-group list-group-flush">
+                    {% for category in categories %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'category_list' %}?category={{ category.id }}" class="text-decoration-none">
+                            {{ category.name }}
+                        </a>
+                        <span>
+                            <span class="badge bg-info rounded-pill me-2">{{ category.post_set.count }}</span>
+                            {% if user.is_staff %}
+                            <a href="{% url 'edit_category' category.pk %}" class="btn btn-sm btn-outline-light me-1">✏</a>
+                            <a href="{% url 'delete_category' category.pk %}" class="btn btn-sm btn-outline-danger">🗑</a>
+                            {% endif %}
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="alert alert-warning mb-0">Категории отсутствуют. Создайте новую категорию!</div>
+                {% endif %}
+                <a href="{% url 'create_category' %}" class="btn btn-outline-success mt-3 w-100">Новая категория</a>
+            </div>
+        </div>
+    </aside>
+    {% endif %}
+
+    <main class="{% if user.is_authenticated %}col-md-9 order-md-1{% else %}col-12{% endif %}">
+        <section class="mb-5">
+            {% if featured_posts %}
+            <div id="featuredPostsCarousel" class="carousel slide rounded shadow" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for post in featured_posts %}
+                    <button type="button" data-bs-target="#featuredPostsCarousel" data-bs-slide-to="{{ forloop.counter0 }}"
+                        class="{% if forloop.first %}active{% endif %}" aria-current="{% if forloop.first %}true{% endif %}"
+                        aria-label="Слайд {{ forloop.counter }}"></button>
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for post in featured_posts %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        {% if post.image %}
+                        <img src="{{ post.image.url }}" class="d-block w-100" alt="{{ post.title }}"
+                             style="height: 420px; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-secondary d-flex justify-content-center align-items-center" style="height: 420px;">
+                            <span class="text-white fs-3">Нет изображения</span>
+                        </div>
+                        {% endif %}
+                        <div class="carousel-caption bg-dark bg-opacity-75 rounded p-3">
+                            <h5 class="fw-bold">{{ post.title }}</h5>
+                            <p>{{ post.content|truncatechars:100 }}</p>
+                            <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-outline-light btn-sm">Подробнее</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#featuredPostsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                    <span class="visually-hidden">Предыдущий</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#featuredPostsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                    <span class="visually-hidden">Следующий</span>
+                </button>
+            </div>
+            {% endif %}
+        </section>
+
+        <section>
+            <h2 class="mb-4 border-bottom pb-2">Свежие публикации</h2>
+            {% for post in latest_posts %}
+            <article class="card mb-4 shadow-sm">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 280px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h3 class="card-title">{{ post.title }}</h3>
+                    <p class="card-text">{{ post.content|truncatechars:180 }}</p>
+                    <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-primary btn-sm">Читать полностью</a>
+                </div>
+                <div class="card-footer text-muted small">
+                    <span>Дата: {{ post.published_date|date:"d.m.Y H:i" }}</span> |
+                    <span>Автор: {{ post.author.username }}</span> |
+                    <span>Категория: <a href="{% url 'category_list' %}?category={{ post.category.id }}">{{ post.category.name }}</a></span>
+                </div>
+            </article>
+            {% empty %}
+            <div class="alert alert-info">Публикаций пока нет. Создайте первую!</div>
+            {% endfor %}
+        </section>
+    </main>
+</div>
+{% endblock %}

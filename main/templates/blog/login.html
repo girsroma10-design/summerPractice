@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card shadow-sm p-4" style="width: 350px;">
+
+    <h2 class="mb-4 text-center">Вход</h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="id_username" class="form-label">Имя пользователя</label>
+        <input type="text" name="username" id="id_username" class="form-control" value="{{ form.username.value|default_if_none:'' }}">
+        {% if form.username.errors %}
+          <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="id_password" class="form-label">Пароль</label>
+        <input type="password" name="password" id="id_password" class="form-control">
+        {% if form.password.errors %}
+          <div class="text-danger small mt-1">{{ form.password.errors }}</div>
+        {% endif %}
+      </div>
+
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" name="remember_me" id="remember_me" {% if request.POST.remember_me %}checked{% endif %}>
+        <label class="form-check-label" for="remember_me">Запомнить меня</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Войти</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
